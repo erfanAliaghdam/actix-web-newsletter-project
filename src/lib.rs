@@ -4,14 +4,17 @@ mod handlers {
 }
 use crate::handlers::health_check_handler::health_check;
 use actix_web::dev::Server;
+use std::net::TcpListener;
 
-pub fn run() -> Result<Server, std::io::Error> {
+
+pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
+    let server_address =  listener.local_addr().unwrap();
     let server = HttpServer::new(|| { App::new()
-        .route("/health-check", web::get().to(health_check))
-        .route("/health-check/{name}", web::get().to(health_check))
+        .route("/api/health-check", web::get().to(health_check))
+        .route("/api/health-check/{name}", web::get().to(health_check))
     })
-        .bind("127.0.0.1:8000")?
+        .listen(listener)?
         .run();
-    println!("⚡ Server running at http://127.0.0.1:8000");
+    println!("⚡ Server running at http://{}", server_address);
     Ok(server)
 }
