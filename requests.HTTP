@@ -1,0 +1,14 @@
+@host=http://127.0.0.1:8000
+
+###
+#@name Health check
+GET {{host}}/api/health-check
+
+
+###
+# @name Subscribe
+POST {{host}}/api/subscribe
+Content-Type: application/x-www-form-urlencoded
+
+name=John+Doe&email=johndoe@example.com
+
