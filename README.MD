@@ -1,6 +1,14 @@
-## setup postgres database:
+## how to run project:
 ```bash
 docker-compose up --build -d
+```
+
+```bash
+docker-compose exec backend bash
+```
+
+```bash
+cargo run
 ```
 
 ## create database
@@ -14,7 +22,3 @@ sqlx database create
 cargo test
 ```
 
-## run server
-```bash
-cargo run
-```
