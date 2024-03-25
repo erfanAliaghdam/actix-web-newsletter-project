@@ -1,7 +1,20 @@
 use std::net::TcpListener;
 use reqwest::StatusCode;
 use serde_json::Value;
-use actix_web_newsletter_project::run;
+use actix_web_newsletter_project::runner::run;
+
+
+pub fn spawn_app() -> String {
+    let listener = TcpListener::bind("127.0.0.1:0")
+        .expect("Failed to bind random port");
+    // We retrieve the port assigned to us by the OS
+    let port = listener.local_addr().unwrap().port();
+    let server = run(listener).expect("Failed to bind address");
+    // launch the server at background
+    let _ = tokio::spawn(server);
+    format!("http://127.0.0.1:{}", port)
+}
+
 
 #[tokio::test]
 async fn health_check_works() {
@@ -20,7 +33,7 @@ async fn health_check_works() {
          .expect("Failed to read response body as text.");
 
      // Parse the response body as JSON
-     let json_body: serde_json::Value = serde_json::from_str(&body)
+     let json_body: Value = serde_json::from_str(&body)
          .expect("Failed to parse response body as JSON.");
 
      assert_eq!(
@@ -32,16 +45,6 @@ async fn health_check_works() {
      );
 }
 
-fn spawn_app() -> String {
-    let listener = TcpListener::bind("127.0.0.1:0")
-        .expect("Failed to bind random port");
-    // We retrieve the port assigned to us by the OS
-    let port = listener.local_addr().unwrap().port();
-    let server = run(listener).expect("Failed to bind address");
-    // launch the server at background
-    let _ = tokio::spawn(server);
-    format!("http://127.0.0.1:{}", port)
-}
 
 #[tokio::test]
 async fn subscribe_form_returns_200_code_on_valid_data() {

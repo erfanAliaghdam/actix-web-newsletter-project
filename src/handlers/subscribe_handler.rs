@@ -1,6 +1,5 @@
 use actix_web::{web, Responder, HttpResponse};
-use crate::extractors::subscribe_extractor::SubscribeFormData;
-
+use crate::extractors::SubscribeFormData;
 
 
 pub async fn subscribe(_form: web::Form<SubscribeFormData>) -> impl Responder {
